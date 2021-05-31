@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  ValidationPipe,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, MoreThan, Repository } from 'typeorm';
