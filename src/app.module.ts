@@ -2,10 +2,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import ormConfig from 'src/config/orm.config';
-import { AppController } from '../app.controller';
-import { AppService } from '../app.service';
-import { Event } from './event.entity';
-import { EventsModule } from './events.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
