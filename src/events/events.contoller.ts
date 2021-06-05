@@ -17,6 +17,7 @@ import { Like, MoreThan, Repository } from 'typeorm';
 import { Attendee } from './attendee.entity';
 import { CreateEventDto } from './create-event.dto';
 import { Event } from './event.entity';
+import { EventsService } from './event.service';
 import { UpdateEventDto } from './update-event.dto';
 
 @Controller('/events')
@@ -28,6 +29,7 @@ export class EventsController {
     private readonly repository: Repository<Event>,
     @InjectRepository(Attendee)
     private readonly attendeeRepository: Repository<Attendee>,
+    private readonly eventsService: EventsService,
   ) {}
 
   @Get()
@@ -40,7 +42,7 @@ export class EventsController {
 
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    const event = await this.repository.findOne(id);
+    const event = await this.eventsService.getEvent(id);
     if (!event) {
       throw new NotFoundException();
     }
