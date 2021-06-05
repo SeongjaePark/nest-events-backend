@@ -14,6 +14,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Like, MoreThan, Repository } from 'typeorm';
+import { Attendee } from './attendee.entity';
 import { CreateEventDto } from './create-event.dto';
 import { Event } from './event.entity';
 import { UpdateEventDto } from './update-event.dto';
@@ -25,6 +26,8 @@ export class EventsController {
   constructor(
     @InjectRepository(Event)
     private readonly repository: Repository<Event>,
+    @InjectRepository(Attendee)
+    private readonly attendeeRepository: Repository<Attendee>,
   ) {}
 
   @Get()
