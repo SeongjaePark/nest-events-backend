@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import ormConfig from 'src/config/orm.config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
 import { EventsModule } from './events/events.module';
 
 @Module({
@@ -15,6 +16,7 @@ import { EventsModule } from './events/events.module';
     TypeOrmModule.forRootAsync({
       useFactory: ormConfig,
     }),
+    AuthModule,
     EventsModule,
   ],
   controllers: [AppController],
