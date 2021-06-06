@@ -11,6 +11,7 @@ import {
   Patch,
   Post,
   Query,
+  UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -35,11 +36,18 @@ export class EventsController {
   ) {}
 
   @Get()
+  @UsePipes(new ValidationPipe({ transform: true }))
   async findAll(@Query() filter: ListEvents) {
     // this.logger.log('Hit the findAll route');
-    const events = await this.eventsService.getEventsWithAttendeeCountFiltered(
-      filter,
-    );
+    const events =
+      await this.eventsService.getEventsWithAttendeeCountFilteredPaginated(
+        filter,
+        {
+          total: true,
+          currentPage: filter.page,
+          limit: 2,
+        },
+      );
     // this.logger.debug(`Found ${events.length} events`);
     return events;
   }
