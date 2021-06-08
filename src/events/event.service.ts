@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/auth/user.entity';
 import { paginate, PaginateOptions } from 'src/pagination/paginator';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, Repository, SelectQueryBuilder } from 'typeorm';
 import { AttendeeAnswerEnum } from './attendee.entity';
 import { Event, PaginatedEvents } from './event.entity';
 import { CreateEventDto } from './input/create-event.dto';
@@ -17,13 +17,13 @@ export class EventsService {
     private readonly eventsRepository: Repository<Event>,
   ) {}
 
-  private getEventsBaseQuery() {
+  private getEventsBaseQuery(): SelectQueryBuilder<Event> {
     return this.eventsRepository
       .createQueryBuilder('e')
       .orderBy('e.id', 'DESC');
   }
 
-  public getEventsWithAttendeeCountQuery() {
+  public getEventsWithAttendeeCountQuery(): SelectQueryBuilder<Event> {
     return this.getEventsBaseQuery()
       .loadRelationCountAndMap('e.attendeeCount', 'e.attendees')
       .loadRelationCountAndMap(
@@ -55,7 +55,9 @@ export class EventsService {
       );
   }
 
-  private getEventsWithAttendeeCountFilteredQuery(filter?: ListEvents) {
+  private getEventsWithAttendeeCountFilteredQuery(
+    filter?: ListEvents,
+  ): SelectQueryBuilder<Event> {
     let query = this.getEventsWithAttendeeCountQuery();
     if (!filter) {
       return query;
@@ -149,7 +151,9 @@ export class EventsService {
     );
   }
 
-  private getEventsOrganizedByUserIdQuery(userId: number) {
+  private getEventsOrganizedByUserIdQuery(
+    userId: number,
+  ): SelectQueryBuilder<Event> {
     return this.getEventsBaseQuery().where('e.organizer_id = :userId', {
       userId,
     });
@@ -165,7 +169,9 @@ export class EventsService {
     );
   }
 
-  private getEventsAttendedByUserIdQuery(userId: number) {
+  private getEventsAttendedByUserIdQuery(
+    userId: number,
+  ): SelectQueryBuilder<Event> {
     return this.getEventsBaseQuery()
       .leftJoinAndSelect('e.attendees', 'a')
       .where('a.userId = :userId', { userId });
