@@ -143,9 +143,25 @@ export class EventsService {
     );
   }
 
-  public getEventsOrganizedByUserIdQuery(userId: number) {
+  private getEventsOrganizedByUserIdQuery(userId: number) {
     return this.getEventsBaseQuery().where('e.organizer_id = :userId', {
       userId,
     });
+  }
+
+  public async getEventsAttendedByUserIdPaginated(
+    userId: number,
+    paginateOptions: PaginateOptions,
+  ): Promise<PaginatedEvents> {
+    return paginate<Event>(
+      this.getEventsAttendedByUserIdQuery(userId),
+      paginateOptions,
+    );
+  }
+
+  private getEventsAttendedByUserIdQuery(userId: number) {
+    return this.getEventsBaseQuery()
+      .leftJoinAndSelect('e.attendees', 'a')
+      .where('a.userId = :userId', { userId });
   }
 }
